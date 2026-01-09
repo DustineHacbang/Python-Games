@@ -1,5 +1,9 @@
+
 import datetime
 
+#--------------------------------
+#Email class
+#--------------------------------
 class Email:
     def __init__(self, sender, receiver, subject, body):
         self.sender = sender
@@ -25,16 +29,6 @@ class Email:
     def __str__(self):
         status = 'Read' if self.read else 'Unread'
         return f"[{status}] From: {self.sender.name} | Subject: {self.subject} | Time: {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
-
-class User:
-    def __init__(self, name):
-        self.name = name
-        self.inbox = Inbox()
-
-    def send_email(self, receiver, subject, body):
-        email = Email(sender=self, receiver=receiver, subject=subject, body=body)
-        receiver.inbox.receive_email(email)
-
 class Inbox:
     def __init__(self):
         self.emails = []
@@ -49,6 +43,7 @@ class Inbox:
         print('\nYour Emails:')
         for i, email in enumerate(self.emails, start=1):
             print(f'{i}. {email}')
+
 
     def read_email(self, index):
         if not self.emails:
@@ -70,3 +65,49 @@ class Inbox:
             return
         del self.emails[actual_index]
         print('Email deleted.\n')
+
+class User:
+    def __init__(self, name):
+        self.name = name
+        self.inbox = Inbox()
+#--------------------------------
+    def send_email(self, receiver, subject, body):
+        email = Email(sender=self, receiver=receiver, subject=subject, body=body)
+        receiver.inbox.receive_email(email)
+        print(f'Email sent from {self.name} to {receiver.name}!\n')
+#--------------------------------
+    def check_inbox(self):
+        print(f"\n{self.name}'s Inbox:")
+        self.inbox.list_emails()
+#--------------------------------
+    def read_email(self, index):
+        self.inbox.read_email(index)
+#--------------------------------
+    def delete_email(self, index):
+        self.inbox.delete_email(index)
+
+
+    #main function
+    #create two users
+    #send an email from one user to the other
+    #check the inbox of the second user
+    #read the email
+    #delete the email
+    #check the inbox of the second user again
+def main():
+    tory = User("Tory")
+    ramy = User("Ramy")
+
+    tory.send_email(ramy, "Hello", "Hi Ramy, just saying hello!")
+    ramy.send_email(tory, "Re: Hello", "Hi Tory, hope you are fine.")
+
+    ramy.check_inbox()
+    ramy.read_email(1)
+    ramy.delete_email(1)
+    ramy.check_inbox()
+
+#--------------------------------
+#--------------------------------
+#--------------------------------
+if __name__ == '__main__':
+    main()
